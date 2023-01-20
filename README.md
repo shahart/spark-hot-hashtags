@@ -3,8 +3,8 @@
 
 [Spark-Programming-Guide](http://spark.apache.org/docs/latest/streaming-programming-guide.html)
 
-note: streaming is legacy, migrate to Structured Streaming
-that's an old snapshot.
+note: streaming is legacy, migrate to Structured Streaming.
+That's an old snapshot, ~ 4 years.
 
 ## how to run
 
