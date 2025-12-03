@@ -1,4 +1,4 @@
 matplotlib
 tweepy
 pyspark
-
+ipywidgets

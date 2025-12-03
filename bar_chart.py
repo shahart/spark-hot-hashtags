@@ -4,6 +4,7 @@
 
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+import ipywidgets as widgets
 import logging
 import collections
 import os
@@ -15,11 +16,23 @@ MINIMUM_START_OVERLAP = 3
 figure, ax = plt.subplots()
 prev_ordered = ''
 
+def show():
+    plt.show()
+    
 
 def main():
     logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
     ani = animation.FuncAnimation(figure, animate_func, interval=UPDATE_INTERVAL_IN_SEC * 1000)
-    plt.show()
+    show()
+    # year_range_slider = widgets.IntRangeSlider(
+    #     value=[1, 2],
+    #     min=1,
+    #     max=2,
+    #     step=0.1,
+    #     description='x:',
+    #     continues_update=False
+    # )
+    # widgets.interact(show)    
 
 
 def animate_func(i):
