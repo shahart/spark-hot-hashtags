@@ -1,12 +1,5 @@
 """Flush top 10 hashtags"""
 import logging
-
-from pyspark import SparkContext
-from pyspark.streaming import StreamingContext
-
-from pyspark.sql import Row, SQLContext, SparkSession
-
-import logging
 import sys
 
 
@@ -20,6 +13,11 @@ BATCH_DURATION = 1
 
 # TODO isolate the business logic (reduceByKeyAndWindow) for the unit test
 
+
+def parse_line(line):
+    """Return count pairs for the whitespace-separated words in a stream line."""
+    return [(word, 1) for word in line.split()]
+
 def main():
     if len(sys.argv) != 3:
         raise IOError("Indicate the twitter-supplier host, and the port, like: localhost 9999 ")
@@ -27,6 +25,9 @@ def main():
     logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
     logging.getLogger("py4j").setLevel(logging.WARN)
     logging.info("Starting, give it 15 sec")
+    from pyspark import SparkContext
+    from pyspark.streaming import StreamingContext
+
     sc = SparkContext("local[1]", "hot-hashtags")
     logging.info("Sanity, 3 sec")
 
@@ -41,8 +42,7 @@ def main():
     # ssc.remember(60)
 
     datastream = ssc.socketTextStream(sys.argv[1], int(sys.argv[2]))
-    words = datastream.flatMap(lambda line: line.split(" "))
-    hashtags = words.map(lambda x: (x, 1))
+    hashtags = datastream.flatMap(parse_line)
 
     tags_totals = hashtags.reduceByKey( # AndWindow(
         lambda x, y: x + y)
@@ -63,6 +63,9 @@ def main():
 
 
 def foreachRDD(time, rdd):
+    from pyspark import SparkContext
+    from pyspark.sql import Row, SQLContext
+
     print("========= %s =========" % str(time))
     rdd.pprint()
     if rdd.isEmpty():

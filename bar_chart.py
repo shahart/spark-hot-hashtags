@@ -2,9 +2,6 @@
 
 # TODO render via web app, and not via direct connect to Spark's driver machine
 
-import matplotlib.pyplot as plt
-import matplotlib.animation as animation
-import ipywidgets as widgets
 import logging
 import collections
 import os
@@ -13,14 +10,21 @@ import time
 UPDATE_INTERVAL_IN_SEC = 5
 MINIMUM_START_OVERLAP = 3
 
-figure, ax = plt.subplots()
+figure = None
+ax = None
 prev_ordered = ''
 
 def show():
+    import matplotlib.pyplot as plt
     plt.show()
     
 
 def main():
+    import matplotlib.pyplot as plt
+    import matplotlib.animation as animation
+
+    global figure, ax
+    figure, ax = plt.subplots()
     logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
     ani = animation.FuncAnimation(figure, animate_func, interval=UPDATE_INTERVAL_IN_SEC * 1000)
     show()
